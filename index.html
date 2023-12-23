@@ -19,7 +19,7 @@
             width: 100%;
             text-align: center;
             vertical-align: middle;
-            top: 50%;
+            top: 40%;
             left: 0;
             right: 0;
         }
@@ -38,19 +38,52 @@
             color: rgb(130, 130, 130);
             
         }
+        #canvas {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        button{
+            background-color: rgb(125, 125, 125);
+            border: none;
+            width:100px;
+            height: 30px;
+            border-radius: 12px;
+            transition: ease-in-out 0.2s;
+        }
+        button:hover{
+            background-color: rgb(74, 74, 74);
+        }
     </style>
 </head>
 <body>
+    <audio id="music"></audio><br><br>
     <div id="center-content">
         <h2>iucc</h2>
         <a>current time (locally): <b id="time">loading</b></a><br><br>
-        <a href="https://www.last.fm/user/IuCC">lastfm</a> - <a href="https://osu.ppy.sh/users/14438713">osu</a> / <a href="https://lazer.ppy.sh/users/14438713">osu!lazer</a> - <a href="https://discord.com/invite/V5Zvwttq">discord</a> - <a href="https://github.com/IuCC123">github</a>
+        now playing: <b id="currentSong">nothing</b><br><br>
+        <button id="mediaControl" onclick="togglePlay()">play music</button> <button onclick="nextSong()">></button><br><br>
+        volume:<input type="range" id="volume" value="100"></input>
+        <br><br>
+        <a href="https://www.last.fm/user/IuCC">lastfm</a> - <a href="https://osu.ppy.sh/users/14438713">osu</a> / <a href="https://lazer.ppy.sh/users/14438713">osu!lazer</a> - <a href="https://discord.com/invite/V5Zvwttq">discord</a> - <a href="https://github.com/IuCC123">github</a><br<br>
     </div>
+    <canvas id="canvas"></canvas>
     <script>
         updateTime()
         setInterval(function(){
             document.getElementById('time').innerText = updateTime()
+            music.volume = document.getElementById('volume').value / 100
         }, 100)
+        setInterval(function(){
+            if(isPlaying){
+                document.getElementById('currentSong').innerHTML = "<a href='"+document.getElementById('music').src+"'>"+document.getElementById('music').src+"</a>"
+            }else{
+                document.getElementById('currentSong').innerText = "nothing"
+            }
+        }, 1000)
         function updateTime(){
             let options = {
                 timeZone: 'Europe/Amsterdam',
@@ -65,6 +98,152 @@
 
             return formatter.format(new Date());
         }
+
+        var songs = [
+        "/music/black friday.mp3",
+        "/music/wonder if u care.mp3",
+        "/music/tired.mp3",
+        "/music/myth.mp3",
+        "/music/welcome and goodbye.mp3",
+        "/music/dreaming about how good things used to be.mp3"
+        ]
+
+        var music = document.getElementById("music");
+        music.src = songs[0]
+        var currentSong = 0
+        var isPlaying = false;
+
+        function nextSong(){
+            if(isPlaying){
+                currentSong++
+                console.log(currentSong, songs.length)
+                if(currentSong > songs.length-1){
+                    currentSong = 0  
+                }
+                music.src = songs[currentSong]
+                music.play()
+            }else{
+                music.play()
+            }
+        }
+
+        function togglePlay() {
+            isPlaying ? music.pause() : music.play();
+        };
+
+        music.onplaying = function() {
+            isPlaying = true;
+            document.getElementById('mediaControl').innerText = "pause music"
+            var audio = document.getElementById("music");
+            var context = new AudioContext();
+            var src = context.createMediaElementSource(audio);
+            var analyser = context.createAnalyser();
+
+            var canvas = document.getElementById("canvas");
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            var ctx = canvas.getContext("2d");
+
+            src.connect(analyser);
+            analyser.connect(context.destination);
+
+            analyser.fftSize = 256;
+
+            var bufferLength = analyser.frequencyBinCount;
+            console.log(bufferLength);
+
+            var dataArray = new Uint8Array(bufferLength);
+
+            var WIDTH = canvas.width;
+            var HEIGHT = canvas.height;
+
+            var barWidth = (WIDTH / bufferLength) * 2.5;
+            var barHeight;
+            var x = 0;
+
+            function renderFrame() {
+            requestAnimationFrame(renderFrame);
+
+            x = 0;
+
+            analyser.getByteFrequencyData(dataArray);
+
+            ctx.fillStyle = "#000";
+            ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+            for (var i = 0; i < bufferLength; i++) {
+                barHeight = dataArray[i];
+                
+                var r = barHeight + (25 * (i/bufferLength));
+                var g = 250 * (i/bufferLength);
+                var b = 50;
+
+                ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
+                ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
+
+                x += barWidth + 1;
+            }
+            }
+            renderFrame();
+        };
+        music.onpause = function() {
+            isPlaying = false;
+            document.getElementById('mediaControl').innerText = "play music"
+        };
+
+        // window.onload = function() {
+        //     var audio = document.getElementById("music");
+        //     var context = new AudioContext();
+        //     var src = context.createMediaElementSource(audio);
+        //     var analyser = context.createAnalyser();
+
+        //     var canvas = document.getElementById("canvas");
+        //     canvas.width = window.innerWidth;
+        //     canvas.height = window.innerHeight;
+        //     var ctx = canvas.getContext("2d");
+
+        //     src.connect(analyser);
+        //     analyser.connect(context.destination);
+
+        //     analyser.fftSize = 256;
+
+        //     var bufferLength = analyser.frequencyBinCount;
+        //     console.log(bufferLength);
+
+        //     var dataArray = new Uint8Array(bufferLength);
+
+        //     var WIDTH = canvas.width;
+        //     var HEIGHT = canvas.height;
+
+        //     var barWidth = (WIDTH / bufferLength) * 2.5;
+        //     var barHeight;
+        //     var x = 0;
+
+        //     function renderFrame() {
+        //     requestAnimationFrame(renderFrame);
+
+        //     x = 0;
+
+        //     analyser.getByteFrequencyData(dataArray);
+
+        //     ctx.fillStyle = "#000";
+        //     ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+        //     for (var i = 0; i < bufferLength; i++) {
+        //         barHeight = dataArray[i];
+                
+        //         var r = barHeight + (25 * (i/bufferLength));
+        //         var g = 250 * (i/bufferLength);
+        //         var b = 50;
+
+        //         ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
+        //         ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
+
+        //         x += barWidth + 1;
+        //     }
+        //     }
+        //     renderFrame();
+        //     };
     </script>
 </body>
 </html>
