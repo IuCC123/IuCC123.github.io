@@ -13,8 +13,8 @@
             margin: 0;
             padding: 0;
             font-family: "Roboto", sans-serif;
-  font-weight: 500;
-  font-style: normal;
+            font-weight: 300;
+            font-style: normal;
         }
         #bottom{
             position: fixed;
@@ -94,6 +94,7 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
+        var disabled = false;
         var turndownService = new TurndownService({ option: 'value' })
         $(document).keypress(function(e){
             if (e.which == 13){
@@ -102,6 +103,7 @@
         });
         var id = Math.round(Math.random()*10000)
         function sendMessage(){
+            if(disabled) return;
             var message = document.getElementById('prompt').value;
             if(!message){
                 return
@@ -110,8 +112,9 @@
             <div id="role">You</div>
             <div id="content">${message}</div>
         </div>`
-                document.getElementById('prompt').value = 'GrandmaAI is thinking. Please wait...';
+                document.getElementById('prompt').value = 'GrandmaAI is thinking, please wait...';
                 document.getElementById('prompt').disabled = true
+                disabled = true;
                 $.ajax({
                     url: `https://ai.grandma-does.tech/?id=${id}&msg=${message}`,
                     type: 'GET',
@@ -126,6 +129,7 @@
                             document.getElementById('prompt').value = '';
                             document.getElementById('prompt').disabled = false
                             $("#prompt").select();
+                            disabled = false;
                         }
                     }
                 });
