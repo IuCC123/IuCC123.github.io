@@ -1,0 +1,76 @@
+<html lang="en" class="new">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GrandmaAI - API Docs</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+        body{
+            display: flex;
+            flex-direction: column;
+            background-color: rgb(20, 20, 20);
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: "Roboto", sans-serif;
+            font-weight: 300;
+            font-style: normal;
+            color: white;
+            align-items: center;
+            justify-items: center;
+        }
+        a{
+            color: rgb(158, 158, 255);
+        }
+        #navbar{
+            display: flex;
+            background-color: rgb(14, 14, 14);
+            width: 100%;
+            color: white;
+            align-items: center;
+        }
+        .navbarBtn{
+            color: white;
+            margin: 10px;
+            text-decoration: none;
+            background-color: rgb(48, 48, 48);
+            padding: 10px;
+            border-radius: 6px;
+        }
+        .chatId{
+            color: rgb(194, 194, 194);
+            margin: 10px;
+            font-size: 15px;
+        }
+        .navbarTitle{
+            font-size: 20px;
+            padding-left: 10px;
+        }
+        pre{
+            background-color: rgb(27, 27, 27);
+            width: 70%;
+            text-wrap: pretty;
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar">
+        <p class="navbarTitle">GrandmaAI</p>
+        <a class="chatId" id="chatId"></a>
+        <a class="navbarBtn" href="/ai/index.html">New Chat</a>
+        <a class="navbarBtn" href="/ai/docs.html">API Docs</a>
+    </div>
+    <h1>GrandmaAI API Documentation</h1>
+    <p>This is the API documentation for GrandmaAI. You can use this to create your own AI chat bot.</p>
+    <h2>Getting Started</h2>
+    <p>To get started, you simply need to send a GET request to the API with the following data:</p>
+    <ul>
+        <li>id - The chat id of the chat you want to talk to and save chat history to</li>
+        <li>msg - The message you want to send</li>
+    </ul>
+    <p>Example request: <a href="https://ai.grandma-does.tech/?id=1&msg=Hey!">https://ai.grandma-does.tech/?id=1&msg=Hey!</a></p>
+    <p>Example response:</p>
+    <pre>{"response":{"response":"Hello! How can I assist you today?"},"chat":{"messages":[{"role":"system","content":"[system prompt]"},{"role":"user","content":"Hey!"},{"role":"bot","content":{"response":"Hello! How can I assist you today?"}}],"id":"[chat id]"}}</pre>
+</body>
+</html>
