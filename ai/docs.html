@@ -62,7 +62,7 @@
         <a class="navbarBtn" href="/ai/docs.html">API Docs</a>
     </div>
     <h1>GrandmaAI API Documentation</h1>
-    <p>This is the API documentation for GrandmaAI. You can use this to create your own AI chat bot.</p>
+    <p>This is the API documentation for GrandmaAI. You can use this to talk to the AI chatbot.</p>
     <h2>Getting Started</h2>
     <p>To get started, you simply need to send a GET request to the API with the following data:</p>
     <ul>
@@ -71,6 +71,6 @@
     </ul>
     <p>Example request: <a href="https://ai.grandma-does.tech/?id=1&msg=Hey!">https://ai.grandma-does.tech/?id=1&msg=Hey!</a></p>
     <p>Example response:</p>
-    <pre>{"response":{"response":"Hello! How can I assist you today?"},"chat":{"messages":[{"role":"system","content":"[system prompt]"},{"role":"user","content":"Hey!"},{"role":"bot","content":{"response":"Hello! How can I assist you today?"}}],"id":"[chat id]"}}</pre>
+    <pre>{"response":{"response":"Hello! How can I assist you today?"},"chat":{"messages":[{"role":"system","content":"[system prompt, including chat history]"},{"role":"user","content":"Hey!"},{"role":"bot","content":{"response":"Hello! How can I assist you today?"}}],"id":"[chat id]"}}</pre>
 </body>
 </html>
