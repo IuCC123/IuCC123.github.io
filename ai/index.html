@@ -21,7 +21,7 @@
             bottom: 0;
             left: 0;
             right: 0;
-            height: 50px;
+            height: 45px;
             display: flex;
             flex-direction: row;
             justify-content: center;
@@ -37,22 +37,34 @@
             border-top-left-radius: 12px;
             border-bottom-left-radius: 12px;
             transition: all ease-in-out 0.2s;
+            font-family: "Roboto", sans-serif;
+            font-weight: 300;
+            font-style: normal;
+            padding: 10px;
         }
         button{
             width: 10%;
             height: 100%;
             border: none;
             outline: none;
-            background-color: rgb(31, 31, 31);
+            background-color: rgb(54, 54, 54);
             color: white;
             border-top-right-radius: 12px;
             border-bottom-right-radius: 12px;
+            transition: ease-in-out 0.2s;
+            cursor: pointer;
+        }
+        button:hover{
+            background-color: rgb(73, 73, 73);
+        }
+        button:disabled{
+            background-color: rgb(36, 36, 36);
         }
         a{
             color: rgb(158, 158, 255);
         }
         textarea:disabled{
-            background: rgb(10, 10, 10);
+            background: rgb(37, 37, 37);
         }
         #messages{
             position: fixed;
@@ -83,7 +95,7 @@
             display: flex;
             flex-direction: row;
             width: 100%;
-            height: 15%;
+            height: 20%;
             justify-content: center;
         }
         #card{
@@ -92,28 +104,54 @@
             margin: 10;
             padding: 20;
             border-radius: 12px;
-            color: rgb(131, 131, 131);
+            color: rgb(158, 158, 158);
             transition: ease-in-out 0.2s;
             cursor:pointer;
         }
         #card:hover{
             color: rgb(175, 175, 175);
+            background-color: rgb(59, 59, 59);
+        }
+        #navbar{
+            display: flex;
+            background-color: rgb(14, 14, 14);
+            width: 100%;
+            color: white;
+            align-items: center;
+        }
+        .navbarBtn{
+            color: white;
+            margin: 10px;
+            text-decoration: none;
+            background-color: rgb(48, 48, 48);
+            padding: 10px;
+            border-radius: 6px;
+        }
+        .chatId{
+            color: rgb(194, 194, 194);
+            margin: 10px;
+            font-size: 15px;
+        }
+        .navbarTitle{
+            font-size: 20px;
+            padding-left: 10px;
         }
     </style>
 </head>
 <body>
+    <div id="navbar">
+        <p class="navbarTitle">GrandmaAI</p>
+        <a class="chatId" id="chatId"></a>
+        <a class="navbarBtn" href="/">New Chat</a>
+        <a class="navbarBtn" href="https://ai.grandma-does.tech">API</a>
+    </div>
     <div id="suggestions">
         <div id="card">Make a Node.JS "Hello World" example using express</div>
         <div id="card">What is a good way to store data in Node.JS?</div>
         <div id="card">How to make a simple chatbot using Python?</div>
         <div id="card">What time is it? And what time is it in 10 days?</div>
-        
     </div>
     <div id="messages" style="margin-top: 6%;">
-        <div id="message">
-            <div id="role">System</div>
-            <div id="content">Welcome to GrandmaAI! Send a prompt to get started.</div>
-        </div>
     </div>
     <div id="bottom">
         <textarea type="text" id='prompt' placeholder="Please enter your prompt here"></textarea>
@@ -128,6 +166,7 @@
             }
         });
         var id = Math.round(Math.random()*10000)
+        document.getElementById('chatId').innerText = "Chat ID: "+id
         function sendMessage(){
             if(disabled) return;
             var message = document.getElementById('prompt').value;
@@ -138,8 +177,10 @@
             <div id="role">You</div>
             <div id="content">${message.replaceAll('\n', '<br>')}</div>
         </div>` //html injection wow so scary!!!! idc
-                document.getElementById('prompt').value = 'GrandmaAI is thinking, please wait...';
+                document.getElementById('prompt').value = '';
+                $('#prompt').attr('placeholder','GrandmaAI is thinking...');
                 document.getElementById('prompt').disabled = true
+                document.getElementById('sendBtn').disabled = true
                 disabled = true;
                 $.ajax({
                     url: `https://ai.grandma-does.tech/?id=${id}&msg=${message}`,
@@ -153,12 +194,14 @@
             <div id="content">${marked.parse(res.response.response)}</div>
         </div>`
                             document.getElementById('prompt').value = '';
+                            $('#prompt').attr('placeholder','Please enter your prompt here');
                             if(document.getElementById('suggestions')){
                                 document.getElementById('suggestions').remove();
                                 document.getElementById('messages').style.cssText = 'padding-top: 10;'
                             }
                             
                             document.getElementById('prompt').disabled = false
+                            document.getElementById('sendBtn').disabled = false
                             $("#prompt").select();
                             disabled = false;
                         }
