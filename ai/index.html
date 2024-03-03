@@ -71,7 +71,7 @@
             display: flex;
             flex-direction: column;
             width: 100%;
-            height: 93%;
+            height: 86%;
             overflow-y: auto;
             overflow-x: hidden;
         }
@@ -175,7 +175,7 @@
             }else{
                 document.getElementById('messages').innerHTML += `<div id="message">
             <div id="role">You</div>
-            <div id="content">${message.replaceAll('\n', '<br>')}</div>
+            <div id="content">${marked.parse(message)}</div>
         </div>` //html injection wow so scary!!!! idc
                 document.getElementById('prompt').value = '';
                 $('#prompt').attr('placeholder','GrandmaAI is thinking...');
