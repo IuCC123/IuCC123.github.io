@@ -38,6 +38,7 @@
             executeCommand(command)
         }
         function executeCommand(command){
+            command = command.replaceAll('<', '').replaceAll('>', '') // nop.
             const args = command.split(' ')
             var parent = document.getElementById("terminal");
             var div = document.createElement('div');
