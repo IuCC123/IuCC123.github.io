@@ -31,7 +31,7 @@
             div.style.opacity = 1;
         }, 100)
         parent.appendChild(div);
-        var commandList = [ "ls", "cd", "help", "open", "clear" ]
+        var commandList = [ "ls", "cd", "help", "open", "clear", "cat" ]
         var dir = '~'
         function sendCommand(){
             var command = document.getElementById("inputField").value;
@@ -61,14 +61,18 @@
             if(args[0] == "ls"){
                 if(dir === '~'){
                     var div = document.createElement('div');
-                    div.innerHTML = `pages`
+                    var a = document.createElement('a');
+                    a.innerText = `pages`
                     div.setAttribute('class', 'terminalOutput');
+                    div.appendChild(a)
                     parent.appendChild(div);
                 }
                 else if(dir === '~/pages'){
                     var div = document.createElement('div');
-                    div.innerHTML = `index.html`
+                    var a = document.createElement('a');
+                    a.innerText = `index.html`
                     div.setAttribute('class', 'terminalOutput');
+                    div.appendChild(a)
                     parent.appendChild(div);
                 }
             }
@@ -76,16 +80,20 @@
                 if(args[1] == 'pages'){
                     dir = '~/pages'
                     var div = document.createElement('div');
-                    div.innerHTML = `[iucc@grandma-does.tech ${dir}] `
+                    var a = document.createElement('a');
+                    a.innerText = `[iucc@grandma-does.tech ${dir}] `
                     div.setAttribute('class', 'terminalOutput');
+                    div.appendChild(a)
                     parent.appendChild(div);
                 }
                 if(args[1] == '..'){
                     if (dir !== '~'){
                         dir = dir.substring(0, dir.lastIndexOf('/'))
                         var div = document.createElement('div');
-                        div.innerHTML = `[iucc@grandma-does.tech ${dir}] `
+                        var a = document.createElement('a');
+                        a.innerText = `[iucc@grandma-does.tech ${dir}] `
                         div.setAttribute('class', 'terminalOutput');
+                        div.appendChild(a)
                         parent.appendChild(div);
                     }
                 }
@@ -101,6 +109,19 @@
                 var parent = document.getElementById("terminal");
                 while (parent.firstChild) {
                     parent.removeChild(parent.firstChild);
+                }
+            }
+            if(args[0] == "cat"){
+                if(dir == '~/pages'){
+                    if(args[1] == 'index.html'){
+                        var page = document.documentElement.innerHTML
+                        var div = document.createElement('div');
+                        var pre = document.createElement('pre');
+                        pre.innerText = `${page}`
+                        div.setAttribute('class', 'terminalOutput');
+                        div.appendChild(pre)
+                        parent.appendChild(div);
+                    }
                 }
             }
         }
